@@ -13,8 +13,6 @@ class House with _$House {
     required DateTime rentDueDate,
     required bool isAvailable,
     required String description,
-    required DateTime createdAt,
-    required DateTime updatedAt,
   }) = _House;
 
   factory House.fromJson(Map<String, dynamic> json) => _$HouseFromJson(json);

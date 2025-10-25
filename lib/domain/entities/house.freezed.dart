@@ -28,8 +28,6 @@ mixin _$House {
   DateTime get rentDueDate => throw _privateConstructorUsedError;
   bool get isAvailable => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this House to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,8 +51,6 @@ abstract class $HouseCopyWith<$Res> {
     DateTime rentDueDate,
     bool isAvailable,
     String description,
-    DateTime createdAt,
-    DateTime updatedAt,
   });
 }
 
@@ -80,8 +76,6 @@ class _$HouseCopyWithImpl<$Res, $Val extends House>
     Object? rentDueDate = null,
     Object? isAvailable = null,
     Object? description = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -113,14 +107,6 @@ class _$HouseCopyWithImpl<$Res, $Val extends House>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
           )
           as $Val,
     );
@@ -143,8 +129,6 @@ abstract class _$$HouseImplCopyWith<$Res> implements $HouseCopyWith<$Res> {
     DateTime rentDueDate,
     bool isAvailable,
     String description,
-    DateTime createdAt,
-    DateTime updatedAt,
   });
 }
 
@@ -169,8 +153,6 @@ class __$$HouseImplCopyWithImpl<$Res>
     Object? rentDueDate = null,
     Object? isAvailable = null,
     Object? description = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _$HouseImpl(
@@ -202,14 +184,6 @@ class __$$HouseImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: null == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
       ),
     );
   }
@@ -226,8 +200,6 @@ class _$HouseImpl implements _House {
     required this.rentDueDate,
     required this.isAvailable,
     required this.description,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory _$HouseImpl.fromJson(Map<String, dynamic> json) =>
@@ -247,14 +219,10 @@ class _$HouseImpl implements _House {
   final bool isAvailable;
   @override
   final String description;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'House(id: $id, name: $name, monthlyRent: $monthlyRent, securityDeposit: $securityDeposit, rentDueDate: $rentDueDate, isAvailable: $isAvailable, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'House(id: $id, name: $name, monthlyRent: $monthlyRent, securityDeposit: $securityDeposit, rentDueDate: $rentDueDate, isAvailable: $isAvailable, description: $description)';
   }
 
   @override
@@ -273,11 +241,7 @@ class _$HouseImpl implements _House {
             (identical(other.isAvailable, isAvailable) ||
                 other.isAvailable == isAvailable) &&
             (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.description == description));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,8 +255,6 @@ class _$HouseImpl implements _House {
     rentDueDate,
     isAvailable,
     description,
-    createdAt,
-    updatedAt,
   );
 
   /// Create a copy of House
@@ -318,8 +280,6 @@ abstract class _House implements House {
     required final DateTime rentDueDate,
     required final bool isAvailable,
     required final String description,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
   }) = _$HouseImpl;
 
   factory _House.fromJson(Map<String, dynamic> json) = _$HouseImpl.fromJson;
@@ -338,10 +298,6 @@ abstract class _House implements House {
   bool get isAvailable;
   @override
   String get description;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
 
   /// Create a copy of House
   /// with the given fields replaced by the non-null parameter values.

@@ -14,8 +14,6 @@ _$HouseImpl _$$HouseImplFromJson(Map<String, dynamic> json) => _$HouseImpl(
   rentDueDate: DateTime.parse(json['rentDueDate'] as String),
   isAvailable: json['isAvailable'] as bool,
   description: json['description'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$$HouseImplToJson(_$HouseImpl instance) =>
@@ -27,6 +25,4 @@ Map<String, dynamic> _$$HouseImplToJson(_$HouseImpl instance) =>
       'rentDueDate': instance.rentDueDate.toIso8601String(),
       'isAvailable': instance.isAvailable,
       'description': instance.description,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
     };
