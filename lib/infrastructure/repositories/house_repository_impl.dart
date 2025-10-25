@@ -6,13 +6,13 @@ import '../../domain/repositories/house_repository.dart';
 class HouseRepositoryImpl implements HouseRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collectionName = 'houses';
+  final String _userId = "q7KfG9dLw3S2";
 
   @override
   Future<House> createHouse(House house) async {
     try {
       // Save to Firebase Firestore collection "houses"
-      final userId = "q7KfG9dLw3S2";
-      final houseDocument = house.toJson()..['userId'] = userId;
+      final houseDocument = house.toJson()..['userId'] = _userId;
       await _firestore
           .collection(_collectionName)
           .doc(house.id)
@@ -33,15 +33,18 @@ class HouseRepositoryImpl implements HouseRepository {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection(_collectionName)
-          .orderBy('createdAt', descending: true)
+          .where('userId', isEqualTo: _userId)
           .get();
+      print(snapshot.docs[0].data());
 
-      final List<House> houses = snapshot.docs
-          .map((doc) => House.fromJson(doc.data() as Map<String, dynamic>))
+      final List<dynamic> houses = snapshot.docs
+          .map((doc) => doc.data())
           .toList();
 
       print('Retrieved ${houses.length} houses from Firestore');
-      return houses;
+      return houses
+          .map((house) => House.fromJson(house as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       print('Error getting houses from Firestore: $e');
       throw Exception('Failed to get houses: $e');

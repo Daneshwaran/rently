@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'create_house_page.dart';
+import 'presentation/widgets/house_list_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,38 +87,11 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Welcome to Rently!'),
-            const SizedBox(height: 20),
-            const Text('Your Property Management Solution'),
-            const SizedBox(height: 20),
-            Icon(
-              Icons.home,
-              size: 64,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 20),
-            const Text('Tap the + button to add a new house'),
-          ],
-        ),
+      body: Column(
+        children: [
+          // House list section
+          const Expanded(child: HouseListWidget()),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToCreateHouse,

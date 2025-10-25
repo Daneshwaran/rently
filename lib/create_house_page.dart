@@ -214,6 +214,8 @@ class _CreateHousePageState extends State<CreateHousePage> {
                                       rentDueDate: _rentDueDate!,
                                       isAvailable: _isAvailable,
                                       description: _descriptionController.text,
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
                                     );
 
                                     context.read<HouseBloc>().add(
