@@ -7,6 +7,49 @@ class TenantRepositoryImpl implements TenantRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collectionName = 'tenants';
 
+  // Helper method to convert Firestore data to proper format
+  Map<String, dynamic> _convertFirestoreData(Map<String, dynamic> data) {
+    final convertedData = Map<String, dynamic>.from(data);
+
+    // Convert Timestamp to DateTime, then to ISO string for JSON serialization
+    if (convertedData['moveInDate'] is Timestamp) {
+      final dateTime = (convertedData['moveInDate'] as Timestamp).toDate();
+      convertedData['moveInDate'] = dateTime.toIso8601String();
+    }
+    if (convertedData['createdAt'] is Timestamp) {
+      final dateTime = (convertedData['createdAt'] as Timestamp).toDate();
+      convertedData['createdAt'] = dateTime.toIso8601String();
+    }
+    if (convertedData['updatedAt'] is Timestamp) {
+      final dateTime = (convertedData['updatedAt'] as Timestamp).toDate();
+      convertedData['updatedAt'] = dateTime.toIso8601String();
+    }
+
+    // Handle null values for required numeric fields
+    if (convertedData['rentAmount'] == null) {
+      convertedData['rentAmount'] = 0.0;
+    }
+    if (convertedData['securityDeposit'] == null) {
+      convertedData['securityDeposit'] = 0.0;
+    }
+    if (convertedData['isActive'] == null) {
+      convertedData['isActive'] = true;
+    }
+
+    // Handle type conversions for fields that might be stored as different types
+    if (convertedData['id'] is int) {
+      convertedData['id'] = convertedData['id'].toString();
+    }
+    if (convertedData['houseId'] is int) {
+      convertedData['houseId'] = convertedData['houseId'].toString();
+    }
+    if (convertedData['phoneNumber'] is int) {
+      convertedData['phoneNumber'] = convertedData['phoneNumber'].toString();
+    }
+
+    return convertedData;
+  }
+
   @override
   Future<Tenant> createTenant(Tenant tenant) async {
     try {
@@ -35,7 +78,7 @@ class TenantRepositoryImpl implements TenantRepository {
           .orderBy('createdAt', descending: true)
           .get();
       final tenants = querySnapshot.docs
-          .map((doc) => Tenant.fromJson(doc.data()))
+          .map((doc) => Tenant.fromJson(_convertFirestoreData(doc.data())))
           .toList();
       log('Total tenants in Firestore: ${tenants.length}');
       return tenants;
@@ -54,7 +97,9 @@ class TenantRepositoryImpl implements TenantRepository {
           .doc(id)
           .get();
       if (docSnapshot.exists) {
-        final tenant = Tenant.fromJson(docSnapshot.data()!);
+        final tenant = Tenant.fromJson(
+          _convertFirestoreData(docSnapshot.data()!),
+        );
         log('Tenant found: ${tenant.name}');
         return tenant;
       } else {
@@ -74,10 +119,10 @@ class TenantRepositoryImpl implements TenantRepository {
       final querySnapshot = await _firestore
           .collection(_collectionName)
           .where('houseId', isEqualTo: houseId)
-          .orderBy('createdAt', descending: true)
           .get();
-      final tenants = querySnapshot.docs
-          .map((doc) => Tenant.fromJson(doc.data()))
+
+      final List<Tenant> tenants = querySnapshot.docs
+          .map((doc) => Tenant.fromJson(_convertFirestoreData(doc.data())))
           .toList();
       log('Found ${tenants.length} tenants for house ID: $houseId');
       return tenants;
