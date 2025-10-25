@@ -35,16 +35,13 @@ class HouseRepositoryImpl implements HouseRepository {
           .collection(_collectionName)
           .where('userId', isEqualTo: _userId)
           .get();
-      print(snapshot.docs[0].data());
 
-      final List<dynamic> houses = snapshot.docs
-          .map((doc) => doc.data())
+      final List<House> houses = snapshot.docs
+          .map((doc) => House.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
 
       print('Retrieved ${houses.length} houses from Firestore');
-      return houses
-          .map((house) => House.fromJson(house as Map<String, dynamic>))
-          .toList();
+      return houses;
     } catch (e) {
       print('Error getting houses from Firestore: $e');
       throw Exception('Failed to get houses: $e');
