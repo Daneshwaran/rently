@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'create_house_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Rently - Property Management'),
     );
   }
 }
@@ -56,15 +57,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _navigateToCreateHouse() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateHousePage()),
+    );
   }
 
   @override
@@ -104,18 +101,24 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const Text('Welcome to Rently!'),
+            const SizedBox(height: 20),
+            const Text('Your Property Management Solution'),
+            const SizedBox(height: 20),
+            Icon(
+              Icons.home,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            const SizedBox(height: 20),
+            const Text('Tap the + button to add a new house'),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _navigateToCreateHouse,
+        tooltip: 'Add House',
+        child: const Icon(Icons.home),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
