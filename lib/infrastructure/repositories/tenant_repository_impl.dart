@@ -164,7 +164,7 @@ class TenantRepositoryImpl implements TenantRepository {
   @override
   Future<void> deleteTenant(String id) async {
     try {
-      log('Deleting tenant with ID: $id from Firestore');
+      print('Deleting tenant with ID: $id from Firestore');
 
       await _firestore.collection(_collectionName).doc(id).delete();
 

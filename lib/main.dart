@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Rently',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -39,13 +39,16 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Rently'),
+      home: const MyHomePage(
+        title: 'Rently',
+        subtitle: 'Manage your properties and tenants',
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.subtitle});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -57,7 +60,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
+  final String subtitle;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -96,13 +99,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return BlocProvider.value(
       value: _houseBloc,
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: Column(
-          children: [
-            // House list section
-            const Expanded(child: HouseListWidget()),
-          ],
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                widget.subtitle,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
         ),
+        body: Column(children: [const Expanded(child: HouseListWidget())]),
         floatingActionButton: FloatingActionButton(
           onPressed: _navigateToCreateHouse,
           tooltip: 'Add House',

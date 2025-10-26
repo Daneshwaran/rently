@@ -11,6 +11,8 @@ class TenantInitial extends TenantState {}
 
 class TenantLoading extends TenantState {}
 
+class TenantDeleting extends TenantState {}
+
 class TenantCreated extends TenantState {
   final Tenant tenant;
 

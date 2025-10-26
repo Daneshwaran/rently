@@ -229,7 +229,13 @@ class _TenantPageState extends State<TenantPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TenantDetails(tenant: tenant),
+            builder: (context) => BlocProvider.value(
+              value: _tenantBloc,
+              child: TenantDetails(
+                tenant: tenant,
+                houseId: widget.house.id ?? '',
+              ),
+            ),
           ),
         );
       },
@@ -265,21 +271,10 @@ class _TenantPageState extends State<TenantPage> {
                 ],
               ),
             ),
-            IconButton(
-              onPressed: () {
-                // Navigate to tenant details
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TenantDetails(tenant: tenant),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.arrow_forward_ios,
-                color: Color(0xFF8B4513),
-                size: 16,
-              ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: Color(0xFF8B4513),
+              size: 16,
             ),
           ],
         ),
