@@ -24,6 +24,16 @@ class TenantRepositoryImpl implements TenantRepository {
       final dateTime = (convertedData['updatedAt'] as Timestamp).toDate();
       convertedData['updatedAt'] = dateTime.toIso8601String();
     }
+    if (convertedData['agreementStartDate'] is Timestamp) {
+      final dateTime = (convertedData['agreementStartDate'] as Timestamp)
+          .toDate();
+      convertedData['agreementStartDate'] = dateTime.toIso8601String();
+    }
+    if (convertedData['agreementEndDate'] is Timestamp) {
+      final dateTime = (convertedData['agreementEndDate'] as Timestamp)
+          .toDate();
+      convertedData['agreementEndDate'] = dateTime.toIso8601String();
+    }
 
     // Handle null values for required numeric fields
     if (convertedData['rentAmount'] == null) {

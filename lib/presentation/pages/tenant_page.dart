@@ -4,6 +4,7 @@ import '../../domain/entities/house.dart';
 import '../../domain/entities/tenant.dart';
 import '../../application/bloc/tenant_bloc.dart';
 import '../../infrastructure/repositories/tenant_repository_impl.dart';
+import 'create_tenant.dart';
 import 'tenant_details.dart';
 
 class TenantPage extends StatefulWidget {
@@ -173,19 +174,31 @@ class _TenantPageState extends State<TenantPage> {
 
   Widget _buildNoTenantCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF8F2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: const Row(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Icon(Icons.person_outline, color: Colors.grey, size: 24),
           SizedBox(width: 12),
           Text(
-            'No tenant assigned',
+            'No tenant linked       ',
             style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateTenantPage(),
+                ),
+              );
+            },
+            icon: Icon(Icons.link),
           ),
         ],
       ),

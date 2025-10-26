@@ -9,7 +9,21 @@ class TenantDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Tenant')),
-      body: Column(children: [Text(tenant.name)]),
+      body: Column(
+        children: [
+          Text(tenant.name),
+          Text(tenant.moveInDate.toIso8601String()),
+          Text(tenant.rentAmount.toString()),
+          Text(tenant.securityDeposit.toString()),
+          Text(tenant.agreementStartDate.toIso8601String()),
+          Text(tenant.agreementEndDate.toIso8601String()),
+          Text(tenant.isActive.toString()),
+          Text(tenant.phoneNumber ?? ''),
+          Text(tenant.email ?? ''),
+          Text(tenant.createdAt?.toIso8601String() ?? ''),
+          Text(tenant.updatedAt?.toIso8601String() ?? ''),
+        ],
+      ),
     );
   }
 }

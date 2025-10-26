@@ -25,6 +25,8 @@ mixin _$Tenant {
   String get name => throw _privateConstructorUsedError;
   String get houseId => throw _privateConstructorUsedError;
   DateTime get moveInDate => throw _privateConstructorUsedError;
+  DateTime get agreementStartDate => throw _privateConstructorUsedError;
+  DateTime get agreementEndDate => throw _privateConstructorUsedError;
   double get rentAmount => throw _privateConstructorUsedError;
   double get securityDeposit => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
@@ -52,6 +54,8 @@ abstract class $TenantCopyWith<$Res> {
     String name,
     String houseId,
     DateTime moveInDate,
+    DateTime agreementStartDate,
+    DateTime agreementEndDate,
     double rentAmount,
     double securityDeposit,
     bool isActive,
@@ -81,6 +85,8 @@ class _$TenantCopyWithImpl<$Res, $Val extends Tenant>
     Object? name = null,
     Object? houseId = null,
     Object? moveInDate = null,
+    Object? agreementStartDate = null,
+    Object? agreementEndDate = null,
     Object? rentAmount = null,
     Object? securityDeposit = null,
     Object? isActive = null,
@@ -106,6 +112,14 @@ class _$TenantCopyWithImpl<$Res, $Val extends Tenant>
             moveInDate: null == moveInDate
                 ? _value.moveInDate
                 : moveInDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            agreementStartDate: null == agreementStartDate
+                ? _value.agreementStartDate
+                : agreementStartDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            agreementEndDate: null == agreementEndDate
+                ? _value.agreementEndDate
+                : agreementEndDate // ignore: cast_nullable_to_non_nullable
                       as DateTime,
             rentAmount: null == rentAmount
                 ? _value.rentAmount
@@ -154,6 +168,8 @@ abstract class _$$TenantImplCopyWith<$Res> implements $TenantCopyWith<$Res> {
     String name,
     String houseId,
     DateTime moveInDate,
+    DateTime agreementStartDate,
+    DateTime agreementEndDate,
     double rentAmount,
     double securityDeposit,
     bool isActive,
@@ -182,6 +198,8 @@ class __$$TenantImplCopyWithImpl<$Res>
     Object? name = null,
     Object? houseId = null,
     Object? moveInDate = null,
+    Object? agreementStartDate = null,
+    Object? agreementEndDate = null,
     Object? rentAmount = null,
     Object? securityDeposit = null,
     Object? isActive = null,
@@ -207,6 +225,14 @@ class __$$TenantImplCopyWithImpl<$Res>
         moveInDate: null == moveInDate
             ? _value.moveInDate
             : moveInDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        agreementStartDate: null == agreementStartDate
+            ? _value.agreementStartDate
+            : agreementStartDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        agreementEndDate: null == agreementEndDate
+            ? _value.agreementEndDate
+            : agreementEndDate // ignore: cast_nullable_to_non_nullable
                   as DateTime,
         rentAmount: null == rentAmount
             ? _value.rentAmount
@@ -249,6 +275,8 @@ class _$TenantImpl implements _Tenant {
     required this.name,
     required this.houseId,
     required this.moveInDate,
+    required this.agreementStartDate,
+    required this.agreementEndDate,
     required this.rentAmount,
     required this.securityDeposit,
     required this.isActive,
@@ -270,6 +298,10 @@ class _$TenantImpl implements _Tenant {
   @override
   final DateTime moveInDate;
   @override
+  final DateTime agreementStartDate;
+  @override
+  final DateTime agreementEndDate;
+  @override
   final double rentAmount;
   @override
   final double securityDeposit;
@@ -286,7 +318,7 @@ class _$TenantImpl implements _Tenant {
 
   @override
   String toString() {
-    return 'Tenant(id: $id, name: $name, houseId: $houseId, moveInDate: $moveInDate, rentAmount: $rentAmount, securityDeposit: $securityDeposit, isActive: $isActive, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Tenant(id: $id, name: $name, houseId: $houseId, moveInDate: $moveInDate, agreementStartDate: $agreementStartDate, agreementEndDate: $agreementEndDate, rentAmount: $rentAmount, securityDeposit: $securityDeposit, isActive: $isActive, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -299,6 +331,10 @@ class _$TenantImpl implements _Tenant {
             (identical(other.houseId, houseId) || other.houseId == houseId) &&
             (identical(other.moveInDate, moveInDate) ||
                 other.moveInDate == moveInDate) &&
+            (identical(other.agreementStartDate, agreementStartDate) ||
+                other.agreementStartDate == agreementStartDate) &&
+            (identical(other.agreementEndDate, agreementEndDate) ||
+                other.agreementEndDate == agreementEndDate) &&
             (identical(other.rentAmount, rentAmount) ||
                 other.rentAmount == rentAmount) &&
             (identical(other.securityDeposit, securityDeposit) ||
@@ -322,6 +358,8 @@ class _$TenantImpl implements _Tenant {
     name,
     houseId,
     moveInDate,
+    agreementStartDate,
+    agreementEndDate,
     rentAmount,
     securityDeposit,
     isActive,
@@ -351,6 +389,8 @@ abstract class _Tenant implements Tenant {
     required final String name,
     required final String houseId,
     required final DateTime moveInDate,
+    required final DateTime agreementStartDate,
+    required final DateTime agreementEndDate,
     required final double rentAmount,
     required final double securityDeposit,
     required final bool isActive,
@@ -370,6 +410,10 @@ abstract class _Tenant implements Tenant {
   String get houseId;
   @override
   DateTime get moveInDate;
+  @override
+  DateTime get agreementStartDate;
+  @override
+  DateTime get agreementEndDate;
   @override
   double get rentAmount;
   @override
