@@ -4,6 +4,7 @@ import '../../domain/entities/house.dart';
 import '../../domain/entities/tenant.dart';
 import '../../application/bloc/tenant_bloc.dart';
 import '../../infrastructure/repositories/tenant_repository_impl.dart';
+import 'tenant_details.dart';
 
 class TenantPage extends StatefulWidget {
   final House house;
@@ -192,48 +193,65 @@ class _TenantPageState extends State<TenantPage> {
   }
 
   Widget _buildTenantCard(Tenant tenant) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8F2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.person, color: Color(0xFF8B4513), size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tenant.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8B4513),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TenantDetails(tenant: tenant),
+          ),
+        );
+      },
+
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF8F2),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.person, color: Color(0xFF8B4513), size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tenant.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF8B4513),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Since ${_formatDate(tenant.moveInDate)}',
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    'Since ${_formatDate(tenant.moveInDate)}',
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              // Navigate to tenant details
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xFF8B4513),
-              size: 16,
+            IconButton(
+              onPressed: () {
+                // Navigate to tenant details
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TenantDetails(tenant: tenant),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.arrow_forward_ios,
+                color: Color(0xFF8B4513),
+                size: 16,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
