@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rently',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -106,8 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
               Text(
                 widget.title,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 160, 106, 79),
                 ),
               ),
               Text(
@@ -124,7 +126,8 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: _navigateToCreateHouse,
           tooltip: 'Add House',
-          child: const Icon(Icons.home),
+          child: const Icon(Icons.add, color: Colors.white),
+          backgroundColor: Color.fromARGB(255, 160, 106, 79),
         ),
       ),
     );

@@ -26,11 +26,12 @@ class TenantDetails extends StatelessWidget {
           BlocListener<TenantBloc, TenantState>(
             listener: (context, state) {
               if (state is TenantDeleted) {
-                // Refresh the tenant list in the parent widget
+                // Navigate back first
+                Navigator.pop(context);
+                // Then refresh the tenant list in the parent widget
                 context.read<TenantBloc>().add(
                   GetTenantsByHouseIdEvent(houseId: houseId),
                 );
-                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Tenant deleted successfully!'),

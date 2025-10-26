@@ -8,16 +8,16 @@ import 'create_tenant.dart';
 import 'tenant_details.dart';
 import '../../application/bloc/house_bloc.dart';
 
-class TenantPage extends StatefulWidget {
+class TenantRentPage extends StatefulWidget {
   final House house;
 
-  const TenantPage({super.key, required this.house});
+  const TenantRentPage({super.key, required this.house});
 
   @override
-  State<TenantPage> createState() => _TenantPageState();
+  State<TenantRentPage> createState() => _TenantRentPageState();
 }
 
-class _TenantPageState extends State<TenantPage> {
+class _TenantRentPageState extends State<TenantRentPage> {
   late final TenantBloc _tenantBloc;
 
   @override
@@ -211,8 +211,10 @@ class _TenantPageState extends State<TenantPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      CreateTenantPage(houseId: widget.house.id ?? ''),
+                  builder: (context) => BlocProvider.value(
+                    value: _tenantBloc,
+                    child: CreateTenantPage(houseId: widget.house.id ?? ''),
+                  ),
                 ),
               );
             },
@@ -306,6 +308,15 @@ class _TenantPageState extends State<TenantPage> {
   }
 
   Widget _buildMonthlyBillingSection() {
+    final electricityUsage = 200;
+    final waterUsage = 100;
+    final rent = widget.house.monthlyRent;
+    final rentDueDate = widget.house.rentDueDate;
+    final rentArrears = 100;
+    final electricityBill = 200;
+    final waterBill = 100;
+    final totalAmount = rent + rentArrears + electricityBill + waterBill;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
@@ -317,30 +328,38 @@ class _TenantPageState extends State<TenantPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'October',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF8B4513),
-            ),
-          ),
-          const SizedBox(height: 16),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildBillingItem('Rent arrears', '100 INR', Colors.green),
+                    _buildBillingItem(
+                      'Rent arrears',
+                      '$rentArrears INR',
+                      Colors.green,
+                    ),
                     const SizedBox(height: 12),
                     _buildBillingItem(
                       'Electricity usage',
-                      '200 watts',
+                      '$electricityUsage watts',
                       Colors.black,
                     ),
                     const SizedBox(height: 12),
-                    _buildBillingItem('Water bill', '100 liters', Colors.black),
+                    _buildBillingItem(
+                      'Water usage',
+                      '$waterUsage liters',
+                      Colors.black,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBillingItem(
+                      'Due date',
+                      _formatDate(rentDueDate),
+                      Colors.black,
+                    ),
                   ],
                 ),
               ),
@@ -349,19 +368,23 @@ class _TenantPageState extends State<TenantPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildBillingItem('Rent', '9000 INR', Colors.black),
+                    _buildBillingItem('Rent', '$rent INR', Colors.black),
                     const SizedBox(height: 12),
                     _buildBillingItem(
                       'Electricity bill',
-                      '200 INR',
+                      '$electricityBill INR',
                       Colors.black,
                     ),
                     const SizedBox(height: 12),
-                    _buildBillingItem('Water bill', '100 INR', Colors.black),
+                    _buildBillingItem(
+                      'Water bill',
+                      '$waterBill INR',
+                      Colors.black,
+                    ),
                     const SizedBox(height: 12),
                     _buildBillingItem(
                       'Total amount',
-                      '9400 INR',
+                      '$totalAmount INR',
                       const Color(0xFFA06A4F),
                       isTotal: true,
                     ),

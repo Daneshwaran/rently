@@ -26,6 +26,7 @@ class TenantBloc extends Bloc<TenantEvent, TenantState> {
     emit(TenantLoading());
     try {
       print('Creating tenant: ${event.tenant.toJson()}');
+      emit(TenantLoading());
       final tenant = await _tenantRepository.createTenant(event.tenant);
       emit(TenantCreated(tenant));
     } catch (e) {

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/house.dart';
 import '../../application/bloc/house_bloc.dart';
-import '../../infrastructure/repositories/house_repository_impl.dart';
-import 'tenant_page.dart';
+import 'tenant_rent_page.dart';
 
 class HouseListWidget extends StatefulWidget {
   const HouseListWidget({super.key});
@@ -52,14 +51,14 @@ class _HouseListWidgetState extends State<HouseListWidget> {
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 8,
+                    vertical: 4,
                   ),
                   child: ListTile(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TenantPage(house: house),
+                          builder: (context) => TenantRentPage(house: house),
                         ),
                       );
                     },
@@ -74,7 +73,10 @@ class _HouseListWidgetState extends State<HouseListWidget> {
                     ),
                     title: Text(
                       house.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +86,7 @@ class _HouseListWidgetState extends State<HouseListWidget> {
                         ),
                         Text('Due: ${_formatDate(house.rentDueDate)}'),
                         Text(
-                          house.isAvailable ? 'Available' : 'Not Available',
+                          house.isAvailable ? 'Occupied' : 'Vacant',
                           style: TextStyle(
                             color: house.isAvailable
                                 ? Colors.green
@@ -94,45 +96,7 @@ class _HouseListWidgetState extends State<HouseListWidget> {
                         ),
                       ],
                     ),
-                    trailing: PopupMenuButton(
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text('Edit'),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text(
-                                'Delete',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 'edit') {
-                          // TODO: Navigate to edit page
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Edit functionality coming soon!'),
-                            ),
-                          );
-                        } else if (value == 'delete') {
-                          _showDeleteDialog(context, house);
-                        }
-                      },
-                    ),
+
                     isThreeLine: true,
                   ),
                 );
