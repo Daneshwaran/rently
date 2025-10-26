@@ -27,9 +27,6 @@ mixin _$Tenant {
   DateTime get moveInDate => throw _privateConstructorUsedError;
   DateTime get agreementStartDate => throw _privateConstructorUsedError;
   DateTime get agreementEndDate => throw _privateConstructorUsedError;
-  double get rentAmount => throw _privateConstructorUsedError;
-  double get securityDeposit => throw _privateConstructorUsedError;
-  bool get isActive => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -56,9 +53,6 @@ abstract class $TenantCopyWith<$Res> {
     DateTime moveInDate,
     DateTime agreementStartDate,
     DateTime agreementEndDate,
-    double rentAmount,
-    double securityDeposit,
-    bool isActive,
     String? phoneNumber,
     String? email,
     DateTime? createdAt,
@@ -87,9 +81,6 @@ class _$TenantCopyWithImpl<$Res, $Val extends Tenant>
     Object? moveInDate = null,
     Object? agreementStartDate = null,
     Object? agreementEndDate = null,
-    Object? rentAmount = null,
-    Object? securityDeposit = null,
-    Object? isActive = null,
     Object? phoneNumber = freezed,
     Object? email = freezed,
     Object? createdAt = freezed,
@@ -121,18 +112,6 @@ class _$TenantCopyWithImpl<$Res, $Val extends Tenant>
                 ? _value.agreementEndDate
                 : agreementEndDate // ignore: cast_nullable_to_non_nullable
                       as DateTime,
-            rentAmount: null == rentAmount
-                ? _value.rentAmount
-                : rentAmount // ignore: cast_nullable_to_non_nullable
-                      as double,
-            securityDeposit: null == securityDeposit
-                ? _value.securityDeposit
-                : securityDeposit // ignore: cast_nullable_to_non_nullable
-                      as double,
-            isActive: null == isActive
-                ? _value.isActive
-                : isActive // ignore: cast_nullable_to_non_nullable
-                      as bool,
             phoneNumber: freezed == phoneNumber
                 ? _value.phoneNumber
                 : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -170,9 +149,6 @@ abstract class _$$TenantImplCopyWith<$Res> implements $TenantCopyWith<$Res> {
     DateTime moveInDate,
     DateTime agreementStartDate,
     DateTime agreementEndDate,
-    double rentAmount,
-    double securityDeposit,
-    bool isActive,
     String? phoneNumber,
     String? email,
     DateTime? createdAt,
@@ -200,9 +176,6 @@ class __$$TenantImplCopyWithImpl<$Res>
     Object? moveInDate = null,
     Object? agreementStartDate = null,
     Object? agreementEndDate = null,
-    Object? rentAmount = null,
-    Object? securityDeposit = null,
-    Object? isActive = null,
     Object? phoneNumber = freezed,
     Object? email = freezed,
     Object? createdAt = freezed,
@@ -234,18 +207,6 @@ class __$$TenantImplCopyWithImpl<$Res>
             ? _value.agreementEndDate
             : agreementEndDate // ignore: cast_nullable_to_non_nullable
                   as DateTime,
-        rentAmount: null == rentAmount
-            ? _value.rentAmount
-            : rentAmount // ignore: cast_nullable_to_non_nullable
-                  as double,
-        securityDeposit: null == securityDeposit
-            ? _value.securityDeposit
-            : securityDeposit // ignore: cast_nullable_to_non_nullable
-                  as double,
-        isActive: null == isActive
-            ? _value.isActive
-            : isActive // ignore: cast_nullable_to_non_nullable
-                  as bool,
         phoneNumber: freezed == phoneNumber
             ? _value.phoneNumber
             : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -277,9 +238,6 @@ class _$TenantImpl implements _Tenant {
     required this.moveInDate,
     required this.agreementStartDate,
     required this.agreementEndDate,
-    required this.rentAmount,
-    required this.securityDeposit,
-    required this.isActive,
     this.phoneNumber,
     this.email,
     this.createdAt,
@@ -302,12 +260,6 @@ class _$TenantImpl implements _Tenant {
   @override
   final DateTime agreementEndDate;
   @override
-  final double rentAmount;
-  @override
-  final double securityDeposit;
-  @override
-  final bool isActive;
-  @override
   final String? phoneNumber;
   @override
   final String? email;
@@ -318,7 +270,7 @@ class _$TenantImpl implements _Tenant {
 
   @override
   String toString() {
-    return 'Tenant(id: $id, name: $name, houseId: $houseId, moveInDate: $moveInDate, agreementStartDate: $agreementStartDate, agreementEndDate: $agreementEndDate, rentAmount: $rentAmount, securityDeposit: $securityDeposit, isActive: $isActive, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Tenant(id: $id, name: $name, houseId: $houseId, moveInDate: $moveInDate, agreementStartDate: $agreementStartDate, agreementEndDate: $agreementEndDate, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -335,12 +287,6 @@ class _$TenantImpl implements _Tenant {
                 other.agreementStartDate == agreementStartDate) &&
             (identical(other.agreementEndDate, agreementEndDate) ||
                 other.agreementEndDate == agreementEndDate) &&
-            (identical(other.rentAmount, rentAmount) ||
-                other.rentAmount == rentAmount) &&
-            (identical(other.securityDeposit, securityDeposit) ||
-                other.securityDeposit == securityDeposit) &&
-            (identical(other.isActive, isActive) ||
-                other.isActive == isActive) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.email, email) || other.email == email) &&
@@ -360,9 +306,6 @@ class _$TenantImpl implements _Tenant {
     moveInDate,
     agreementStartDate,
     agreementEndDate,
-    rentAmount,
-    securityDeposit,
-    isActive,
     phoneNumber,
     email,
     createdAt,
@@ -391,9 +334,6 @@ abstract class _Tenant implements Tenant {
     required final DateTime moveInDate,
     required final DateTime agreementStartDate,
     required final DateTime agreementEndDate,
-    required final double rentAmount,
-    required final double securityDeposit,
-    required final bool isActive,
     final String? phoneNumber,
     final String? email,
     final DateTime? createdAt,
@@ -414,12 +354,6 @@ abstract class _Tenant implements Tenant {
   DateTime get agreementStartDate;
   @override
   DateTime get agreementEndDate;
-  @override
-  double get rentAmount;
-  @override
-  double get securityDeposit;
-  @override
-  bool get isActive;
   @override
   String? get phoneNumber;
   @override

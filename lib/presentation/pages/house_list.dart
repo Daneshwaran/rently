@@ -13,184 +13,163 @@ class HouseListWidget extends StatefulWidget {
 }
 
 class _HouseListWidgetState extends State<HouseListWidget> {
-  late final HouseBloc _houseBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _houseBloc = HouseBloc(houseRepository: HouseRepositoryImpl());
-    // Load houses when widget initializes
-    _houseBloc.add(const GetAllHousesEvent());
-  }
-
-  @override
-  void dispose() {
-    _houseBloc.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _houseBloc,
-      child: BlocBuilder<HouseBloc, HouseState>(
-        builder: (context, state) {
-          if (state is HouseLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is HousesLoaded) {
-            if (state.houses.isEmpty) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home_outlined, size: 64, color: Colors.grey),
-                    SizedBox(height: 16),
-                    Text(
-                      'No houses found',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Tap the + button to add your first house',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<HouseBloc>().add(const GetAllHousesEvent());
-              },
-              child: ListView.builder(
-                itemCount: state.houses.length,
-                itemBuilder: (context, index) {
-                  final house = state.houses[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TenantPage(house: house),
-                          ),
-                        );
-                      },
-                      leading: CircleAvatar(
-                        backgroundColor: house.isAvailable
-                            ? Colors.green
-                            : Colors.red,
-                        child: Icon(
-                          house.isAvailable ? Icons.home : Icons.home_outlined,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        house.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Rent: \$${house.monthlyRent.toStringAsFixed(2)}/month',
-                          ),
-                          Text('Due: ${_formatDate(house.rentDueDate)}'),
-                          Text(
-                            house.isAvailable ? 'Available' : 'Not Available',
-                            style: TextStyle(
-                              color: house.isAvailable
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: PopupMenuButton(
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit),
-                                SizedBox(width: 8),
-                                Text('Edit'),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            // TODO: Navigate to edit page
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Edit functionality coming soon!',
-                                ),
-                              ),
-                            );
-                          } else if (value == 'delete') {
-                            _showDeleteDialog(context, house);
-                          }
-                        },
-                      ),
-                      isThreeLine: true,
-                    ),
-                  );
-                },
-              ),
-            );
-          } else if (state is HouseError) {
-            return Center(
+    return BlocBuilder<HouseBloc, HouseState>(
+      builder: (context, state) {
+        if (state is HouseLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is HousesLoaded) {
+          if (state.houses.isEmpty) {
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
+                  Icon(Icons.home_outlined, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
                   Text(
-                    'Error loading houses',
-                    style: TextStyle(fontSize: 18, color: Colors.red[700]),
+                    'No houses found',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
-                    state.message,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<HouseBloc>().add(const GetAllHousesEvent());
-                    },
-                    child: const Text('Retry'),
+                    'Tap the + button to add your first house',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),
             );
           }
 
-          return const Center(child: Text('No data available'));
-        },
-      ),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<HouseBloc>().add(const GetAllHousesEvent());
+            },
+            child: ListView.builder(
+              itemCount: state.houses.length,
+              itemBuilder: (context, index) {
+                final house = state.houses[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TenantPage(house: house),
+                        ),
+                      );
+                    },
+                    leading: CircleAvatar(
+                      backgroundColor: house.isAvailable
+                          ? Colors.green
+                          : Colors.red,
+                      child: Icon(
+                        house.isAvailable ? Icons.home : Icons.home_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    title: Text(
+                      house.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rent: \$${house.monthlyRent.toStringAsFixed(2)}/month',
+                        ),
+                        Text('Due: ${_formatDate(house.rentDueDate)}'),
+                        Text(
+                          house.isAvailable ? 'Available' : 'Not Available',
+                          style: TextStyle(
+                            color: house.isAvailable
+                                ? Colors.green
+                                : Colors.red,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('Edit'),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          // TODO: Navigate to edit page
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Edit functionality coming soon!'),
+                            ),
+                          );
+                        } else if (value == 'delete') {
+                          _showDeleteDialog(context, house);
+                        }
+                      },
+                    ),
+                    isThreeLine: true,
+                  ),
+                );
+              },
+            ),
+          );
+        } else if (state is HouseError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(
+                  'Error loading houses',
+                  style: TextStyle(fontSize: 18, color: Colors.red[700]),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<HouseBloc>().add(const GetAllHousesEvent());
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return const Center(child: Text('No data available'));
+      },
     );
   }
 

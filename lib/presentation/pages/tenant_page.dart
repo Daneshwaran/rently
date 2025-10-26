@@ -194,7 +194,8 @@ class _TenantPageState extends State<TenantPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CreateTenantPage(),
+                  builder: (context) =>
+                      CreateTenantPage(houseId: widget.house.id ?? ''),
                 ),
               );
             },

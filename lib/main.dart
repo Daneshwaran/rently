@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'presentation/pages/create_house.dart';
 import 'presentation/pages/house_list.dart';
+import 'application/bloc/house_bloc.dart';
+import 'infrastructure/repositories/house_repository_impl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Rently - Property Management'),
+      home: const MyHomePage(title: 'Rently'),
     );
   }
 }
@@ -60,44 +63,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late final HouseBloc _houseBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _houseBloc = HouseBloc(houseRepository: HouseRepositoryImpl());
+    // Load houses when the app starts
+    _houseBloc.add(const GetAllHousesEvent());
+  }
+
+  @override
+  void dispose() {
+    _houseBloc.close();
+    super.dispose();
+  }
 
   void _navigateToCreateHouse() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CreateHousePage()),
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: _houseBloc,
+          child: const CreateHousePage(),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    return BlocProvider.value(
+      value: _houseBloc,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: Column(
+          children: [
+            // House list section
+            const Expanded(child: HouseListWidget()),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _navigateToCreateHouse,
+          tooltip: 'Add House',
+          child: const Icon(Icons.home),
+        ),
       ),
-      body: Column(
-        children: [
-          // House list section
-          const Expanded(child: HouseListWidget()),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToCreateHouse,
-        tooltip: 'Add House',
-        child: const Icon(Icons.home),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

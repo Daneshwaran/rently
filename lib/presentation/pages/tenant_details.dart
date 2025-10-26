@@ -13,11 +13,8 @@ class TenantDetails extends StatelessWidget {
         children: [
           Text(tenant.name),
           Text(tenant.moveInDate.toIso8601String()),
-          Text(tenant.rentAmount.toString()),
-          Text(tenant.securityDeposit.toString()),
           Text(tenant.agreementStartDate.toIso8601String()),
           Text(tenant.agreementEndDate.toIso8601String()),
-          Text(tenant.isActive.toString()),
           Text(tenant.phoneNumber ?? ''),
           Text(tenant.email ?? ''),
           Text(tenant.createdAt?.toIso8601String() ?? ''),
