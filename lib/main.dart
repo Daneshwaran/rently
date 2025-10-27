@@ -13,36 +13,60 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final HouseBloc _houseBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _houseBloc = HouseBloc(houseRepository: HouseRepositoryImpl());
+    // Load houses when the app starts
+    _houseBloc.add(const GetAllHousesEvent());
+  }
+
+  @override
+  void dispose() {
+    _houseBloc.close();
+    super.dispose();
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rently',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(
+    return BlocProvider.value(
+      value: _houseBloc,
+      child: MaterialApp(
         title: 'Rently',
-        subtitle: 'Manage your properties and tenants',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        home: const MyHomePage(
+          title: 'Rently',
+          subtitle: 'Manage your properties and tenants',
+        ),
       ),
     );
   }
@@ -67,77 +91,44 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final HouseBloc _houseBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _houseBloc = HouseBloc(houseRepository: HouseRepositoryImpl());
-    // Load houses when the app starts
-    _houseBloc.add(const GetAllHousesEvent());
-  }
-
-  @override
-  void dispose() {
-    _houseBloc.close();
-    super.dispose();
-  }
-
   void _navigateToCreateHouse() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: _houseBloc,
-          child: const CreateHousePage(),
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => const CreateHousePage()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _houseBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 160, 106, 79),
-                ),
-              ),
-              Text(
-                widget.subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: BlocProvider.value(
-                value: _houseBloc,
-                child: HouseListWidget(),
+            Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 160, 106, 79),
+              ),
+            ),
+            Text(
+              widget.subtitle,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
               ),
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _navigateToCreateHouse,
-          tooltip: 'Add House',
-          child: const Icon(Icons.add, color: Colors.white),
-          backgroundColor: Color.fromARGB(255, 160, 106, 79),
-        ),
+      ),
+      body: const Column(children: [Expanded(child: HouseListWidget())]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToCreateHouse,
+        tooltip: 'Add House',
+        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Color.fromARGB(255, 160, 106, 79),
       ),
     );
   }

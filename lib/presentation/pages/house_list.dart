@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/house.dart';
 import '../../application/bloc/house_bloc.dart';
+import '../../application/bloc/tenant_bloc.dart';
+import '../../infrastructure/repositories/tenant_repository_impl.dart';
 import 'tenant_rent_page.dart';
 
 class HouseListWidget extends StatefulWidget {
@@ -55,10 +57,26 @@ class _HouseListWidgetState extends State<HouseListWidget> {
                   ),
                   child: ListTile(
                     onTap: () {
+                      // Capture the bloc before navigation
+                      final houseBloc = context.read<HouseBloc>();
+
+                      final tenantBloc = TenantBloc(
+                        tenantRepository: TenantRepositoryImpl(),
+                      );
+                      tenantBloc.add(
+                        GetTenantsByHouseIdEvent(houseId: house.id),
+                      );
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TenantRentPage(house: house),
+                          builder: (context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider.value(value: houseBloc),
+                              BlocProvider.value(value: tenantBloc),
+                            ],
+                            child: TenantRentPage(house: house),
+                          ),
                         ),
                       );
                     },

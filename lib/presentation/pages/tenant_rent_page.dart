@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/house.dart';
 import '../../domain/entities/tenant.dart';
 import '../../application/bloc/tenant_bloc.dart';
-import '../../infrastructure/repositories/tenant_repository_impl.dart';
 import 'create_tenant.dart';
 import 'tenant_details.dart';
 import '../../application/bloc/house_bloc.dart';
@@ -19,54 +18,43 @@ class TenantRentPage extends StatefulWidget {
 }
 
 class _TenantRentPageState extends State<TenantRentPage> {
-  late final TenantBloc _tenantBloc;
-
   @override
   void initState() {
     super.initState();
-    _tenantBloc = TenantBloc(tenantRepository: TenantRepositoryImpl());
-    // Load tenants for this house
-    _tenantBloc.add(GetTenantsByHouseIdEvent(houseId: widget.house.id ?? ''));
   }
 
   @override
   void dispose() {
-    _tenantBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _tenantBloc,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
-        appBar: AppBar(
-          title: Text(
-            'House #${widget.house.id?.substring(0, 8) ?? 'Unknown'}',
-          ),
-          backgroundColor: const Color(0xFFA06A4F),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              // House Header
-              _buildHouseHeader(),
-              const SizedBox(height: 20),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        title: Text('House #${widget.house.id?.substring(0, 8) ?? 'Unknown'}'),
+        backgroundColor: const Color(0xFFA06A4F),
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // House Header
+            _buildHouseHeader(),
+            const SizedBox(height: 20),
 
-              // Tenant Section
-              _buildTenantSection(),
-              const SizedBox(height: 20),
+            // Tenant Section
+            _buildTenantSection(),
+            const SizedBox(height: 20),
 
-              // Monthly Billing Section
-              _buildMonthlyBillingSection(),
+            // Monthly Billing Section
+            _buildMonthlyBillingSection(),
 
-              deleteHouseButton(),
-              editHouseButton(),
-            ],
-          ),
+            deleteHouseButton(),
+            editHouseButton(),
+          ],
         ),
       ),
     );
@@ -81,7 +69,7 @@ class _TenantRentPageState extends State<TenantRentPage> {
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider.value(
-                value: _tenantBloc,
+                value: context.read<HouseBloc>(),
                 child: EditHousePage(house: widget.house),
               ),
             ),
@@ -234,7 +222,7 @@ class _TenantRentPageState extends State<TenantRentPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider.value(
-                    value: _tenantBloc,
+                    value: context.read<TenantBloc>(),
                     child: CreateTenantPage(houseId: widget.house.id ?? ''),
                   ),
                 ),
@@ -254,7 +242,7 @@ class _TenantRentPageState extends State<TenantRentPage> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider.value(
-              value: _tenantBloc,
+              value: context.read<TenantBloc>(),
               child: TenantDetails(
                 tenant: tenant,
                 houseId: widget.house.id ?? '',
