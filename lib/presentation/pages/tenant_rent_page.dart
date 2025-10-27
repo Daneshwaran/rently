@@ -7,6 +7,7 @@ import '../../infrastructure/repositories/tenant_repository_impl.dart';
 import 'create_tenant.dart';
 import 'tenant_details.dart';
 import '../../application/bloc/house_bloc.dart';
+import 'edit_house.dart';
 
 class TenantRentPage extends StatefulWidget {
   final House house;
@@ -63,9 +64,30 @@ class _TenantRentPageState extends State<TenantRentPage> {
               _buildMonthlyBillingSection(),
 
               deleteHouseButton(),
+              editHouseButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget editHouseButton() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider.value(
+                value: _tenantBloc,
+                child: EditHousePage(house: widget.house),
+              ),
+            ),
+          );
+        },
+        child: const Text('Edit House'),
       ),
     );
   }

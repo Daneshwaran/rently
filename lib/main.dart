@@ -122,7 +122,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        body: Column(children: [const Expanded(child: HouseListWidget())]),
+        body: Column(
+          children: [
+            Expanded(
+              child: BlocProvider.value(
+                value: _houseBloc,
+                child: HouseListWidget(),
+              ),
+            ),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: _navigateToCreateHouse,
           tooltip: 'Add House',
