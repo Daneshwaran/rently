@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/house.dart';
 import '../../domain/repositories/house_repository.dart';
