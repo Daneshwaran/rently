@@ -90,6 +90,34 @@ class PaymentRepositoryImpl implements PaymentRepository {
   }
 
   @override
+  Future<Payment?> getPaymentByHouseAndTenant(
+    String houseId,
+    String tenantId,
+  ) async {
+    try {
+      log('Getting payment by house ID: $houseId and tenant ID: $tenantId');
+      final querySnapshot = await _firestore
+          .collection(_collectionName)
+          .where('houseId', isEqualTo: houseId)
+          .where('tenantId', isEqualTo: tenantId)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final payment = Payment.fromJson(querySnapshot.docs.first.data()!);
+        log('Payment found: ${payment.id}');
+        return payment;
+      } else {
+        log(
+          'Payment not found with house ID: $houseId and tenant ID: $tenantId',
+        );
+        return null;
+      }
+    } catch (e) {
+      log('Error getting payment by house ID: $e');
+      throw Exception('Failed to get payment by house ID: $e');
+    }
+  }
+
+  @override
   Future<Payment?> getPaymentById(String id) async {
     try {
       log('Getting payment by ID: $id');

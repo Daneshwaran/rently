@@ -23,6 +23,18 @@ final paymentsByTenantProvider = FutureProvider.family<List<Payment>, String>((
   return await repository.getPaymentsByTenantId(tenantId);
 });
 
+final getPaymentByHouseAndTenantProvider =
+    FutureProvider.family<Payment?, ({String houseId, String tenantId})>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.read(paymentRepositoryProvider);
+      return await repository.getPaymentByHouseAndTenant(
+        params.houseId,
+        params.tenantId,
+      );
+    });
+
 final createPaymentProvider =
     StateNotifierProvider<CreatePaymentNotifier, AsyncValue<void>>((ref) {
       return CreatePaymentNotifier(ref.read(paymentRepositoryProvider));
