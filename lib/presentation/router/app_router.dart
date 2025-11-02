@@ -13,43 +13,45 @@ final appRouter = GoRouter(
       path: '/',
       name: 'house-list',
       builder: (context, state) => const HouseListPage(),
-    ),
-    GoRoute(
-      path: '/house/create',
-      name: 'create-house',
-      builder: (context, state) => const CreateHousePage(),
-    ),
-    GoRoute(
-      path: '/house/:id',
-      name: 'house-detail',
-      builder: (context, state) {
-        final houseId = state.pathParameters['id']!;
-        return HouseDetailPage(houseId: houseId);
-      },
       routes: [
         GoRoute(
-          path: 'tenant/create',
-          name: 'create-tenant',
-          builder: (context, state) {
-            final houseId = state.pathParameters['id']!;
-            return TenantFormPage(houseId: houseId);
-          },
+          path: 'house/create',
+          name: 'create-house',
+          builder: (context, state) => const CreateHousePage(),
         ),
         GoRoute(
-          path: 'meter-reading',
-          name: 'meter-reading',
+          path: 'house/:id',
+          name: 'house-detail',
           builder: (context, state) {
             final houseId = state.pathParameters['id']!;
-            return MeterReadingPage(houseId: houseId);
+            return HouseDetailPage(houseId: houseId);
           },
-        ),
-        GoRoute(
-          path: 'payment',
-          name: 'payment',
-          builder: (context, state) {
-            final houseId = state.pathParameters['id']!;
-            return PaymentPage(houseId: houseId);
-          },
+          routes: [
+            GoRoute(
+              path: 'tenant/create',
+              name: 'create-tenant',
+              builder: (context, state) {
+                final houseId = state.pathParameters['id']!;
+                return TenantFormPage(houseId: houseId);
+              },
+            ),
+            GoRoute(
+              path: 'meter-reading',
+              name: 'meter-reading',
+              builder: (context, state) {
+                final houseId = state.pathParameters['id']!;
+                return MeterReadingPage(houseId: houseId);
+              },
+            ),
+            GoRoute(
+              path: 'payment',
+              name: 'payment',
+              builder: (context, state) {
+                final houseId = state.pathParameters['id']!;
+                return PaymentPage(houseId: houseId);
+              },
+            ),
+          ],
         ),
       ],
     ),
