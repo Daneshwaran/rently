@@ -20,7 +20,6 @@ class PaymentPage extends ConsumerStatefulWidget {
 class _PaymentPageState extends ConsumerState<PaymentPage> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  PaymentType _selectedType = PaymentType.rent;
   DateTime _paymentDate = DateTime.now();
   String? _tenantId;
 
@@ -167,27 +166,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<PaymentType>(
-                        value: _selectedType,
-                        decoration: const InputDecoration(
-                          labelText: 'Payment Type',
-                          prefixIcon: Icon(Icons.category),
-                        ),
-                        items: PaymentType.values.map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(_getPaymentTypeLabel(type)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              _selectedType = value;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
                       InkWell(
                         onTap: () async {
                           final date = await showDatePicker(
@@ -331,28 +309,16 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     );
   }
 
-  String _getPaymentTypeLabel(PaymentType type) {
-    switch (type) {
-      case PaymentType.rent:
-        return 'Rent Payment';
-      case PaymentType.electricity:
-        return 'Electricity Bill';
-      case PaymentType.water:
-        return 'Water Bill';
-      case PaymentType.partial:
-        return 'Partial Payment';
-    }
-  }
-
   void _recordPayment() {
     if (_formKey.currentState!.validate() && _tenantId != null) {
       final payment = Payment(
         id: const Uuid().v4(),
         tenantId: _tenantId!,
         houseId: widget.houseId,
-        amount: double.parse(_amountController.text),
+        paidAmount: double.parse(_amountController.text),
+        totalAmount: double.parse(_amountController.text),
+        remainingAmount: double.parse(_amountController.text),
         paymentDate: _paymentDate,
-        paymentType: _selectedType,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );

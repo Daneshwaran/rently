@@ -1,12 +1,11 @@
-enum PaymentType { rent, electricity, water, partial }
-
 class Payment {
   final String id;
   final String tenantId;
   final String houseId;
-  final double amount;
+  final double paidAmount;
+  final double totalAmount;
+  final double remainingAmount;
   final DateTime paymentDate;
-  final PaymentType paymentType;
   final String? description;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -15,9 +14,10 @@ class Payment {
     required this.id,
     required this.tenantId,
     required this.houseId,
-    required this.amount,
+    required this.paidAmount,
+    required this.totalAmount,
+    required this.remainingAmount,
     required this.paymentDate,
-    required this.paymentType,
     this.description,
     this.createdAt,
     this.updatedAt,
@@ -28,12 +28,10 @@ class Payment {
       id: json['id'] as String,
       tenantId: json['tenantId'] as String,
       houseId: json['houseId'] as String,
-      amount: (json['amount'] as num).toDouble(),
+      paidAmount: (json['paidAmount'] as num).toDouble(),
+      totalAmount: (json['totalAmount'] as num).toDouble(),
+      remainingAmount: (json['remainingAmount'] as num).toDouble(),
       paymentDate: DateTime.parse(json['paymentDate'] as String),
-      paymentType: PaymentType.values.firstWhere(
-        (e) => e.name == json['paymentType'],
-        orElse: () => PaymentType.rent,
-      ),
       description: json['description'] as String?,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
@@ -49,9 +47,10 @@ class Payment {
       'id': id,
       'tenantId': tenantId,
       'houseId': houseId,
-      'amount': amount,
+      'paidAmount': paidAmount,
+      'totalAmount': totalAmount,
+      'remainingAmount': remainingAmount,
       'paymentDate': paymentDate.toIso8601String(),
-      'paymentType': paymentType.name,
       'description': description,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
@@ -64,7 +63,6 @@ class Payment {
     String? houseId,
     double? amount,
     DateTime? paymentDate,
-    PaymentType? paymentType,
     String? description,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -73,9 +71,10 @@ class Payment {
       id: id ?? this.id,
       tenantId: tenantId ?? this.tenantId,
       houseId: houseId ?? this.houseId,
-      amount: amount ?? this.amount,
+      paidAmount: paidAmount ?? this.paidAmount,
+      totalAmount: totalAmount ?? this.totalAmount,
+      remainingAmount: remainingAmount ?? this.remainingAmount,
       paymentDate: paymentDate ?? this.paymentDate,
-      paymentType: paymentType ?? this.paymentType,
       description: description ?? this.description,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -89,9 +88,8 @@ class Payment {
         other.id == id &&
         other.tenantId == tenantId &&
         other.houseId == houseId &&
-        other.amount == amount &&
+        other.paidAmount == paidAmount &&
         other.paymentDate == paymentDate &&
-        other.paymentType == paymentType &&
         other.description == description &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -103,9 +101,10 @@ class Payment {
       id,
       tenantId,
       houseId,
-      amount,
+      paidAmount,
+      totalAmount,
+      remainingAmount,
       paymentDate,
-      paymentType,
       description,
       createdAt,
       updatedAt,
@@ -114,6 +113,6 @@ class Payment {
 
   @override
   String toString() {
-    return 'Payment(id: $id, tenantId: $tenantId, houseId: $houseId, amount: $amount, paymentDate: $paymentDate, paymentType: $paymentType, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Payment(id: $id, tenantId: $tenantId, houseId: $houseId, paidAmount: $paidAmount, totalAmount: $totalAmount, remainingAmount: $remainingAmount, paymentDate: $paymentDate, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

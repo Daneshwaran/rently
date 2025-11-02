@@ -37,14 +37,17 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
   }
 
   Future<void> _loadPreviousReading() async {
-    final latestReading = await ref.read(
-      latestMeterReadingProvider((
-        houseId: widget.houseId,
-        readingType: _selectedType,
-      )).future,
-    );
+    // final latestReading = await ref.read(
+    //   latestMeterReadingProvider((
+    //     houseId: widget.houseId,
+    //     readingType: _selectedType,
+    //   )).future,
+    // );
+
+    final latestReading = {'electricity': 1000.0, 'water': 1000.0};
+
     setState(() {
-      _previousReading = latestReading?.currentReading ?? 0.0;
+      _previousReading = latestReading[_selectedType.name.toString()] ?? 0.0;
     });
   }
 
@@ -90,45 +93,41 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
-                      Row(
+                      Column(
                         children: [
-                          Expanded(
-                            child: RadioListTile<ReadingType>(
-                              title: const Text('Electricity'),
-                              subtitle: const Text('Power consumption'),
-                              value: ReadingType.electricity,
-                              groupValue: _selectedType,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _selectedType = value;
-                                    _currentReadingController.clear();
-                                    _rateController.clear();
-                                    _calculatedAmount = 0.0;
-                                  });
-                                  _loadPreviousReading();
-                                }
-                              },
-                            ),
+                          RadioListTile<ReadingType>(
+                            title: const Text('Electricity'),
+                            subtitle: const Text('Power consumption'),
+                            value: ReadingType.electricity,
+                            groupValue: _selectedType,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedType = value;
+                                  _currentReadingController.clear();
+                                  _rateController.clear();
+                                  _calculatedAmount = 0.0;
+                                });
+                                _loadPreviousReading();
+                              }
+                            },
                           ),
-                          Expanded(
-                            child: RadioListTile<ReadingType>(
-                              title: const Text('Water'),
-                              subtitle: const Text('Water consumption'),
-                              value: ReadingType.water,
-                              groupValue: _selectedType,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _selectedType = value;
-                                    _currentReadingController.clear();
-                                    _rateController.clear();
-                                    _calculatedAmount = 0.0;
-                                  });
-                                  _loadPreviousReading();
-                                }
-                              },
-                            ),
+                          RadioListTile<ReadingType>(
+                            title: const Text('Water'),
+                            subtitle: const Text('Water consumption'),
+                            value: ReadingType.water,
+                            groupValue: _selectedType,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedType = value;
+                                  _currentReadingController.clear();
+                                  _rateController.clear();
+                                  _calculatedAmount = 0.0;
+                                });
+                                _loadPreviousReading();
+                              }
+                            },
                           ),
                         ],
                       ),

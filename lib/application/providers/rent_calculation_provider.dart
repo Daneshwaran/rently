@@ -94,9 +94,10 @@ double _calculateRentArrears(House house, List<Payment> payments) {
   final now = DateTime.now();
 
   // Calculate total rent paid
-  final totalRentPaid = payments
-      .where((p) => p.paymentType == PaymentType.rent)
-      .fold(0.0, (sum, payment) => sum + payment.amount);
+  final totalRentPaid = payments.fold(
+    0.0,
+    (sum, payment) => sum + payment.paidAmount,
+  );
 
   // Calculate total months that should have been paid
   final monthsSinceStart = _monthsBetween(house.rentDueDate, now);

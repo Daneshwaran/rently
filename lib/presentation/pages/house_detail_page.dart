@@ -128,7 +128,11 @@ class HouseDetailPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-
+                ElevatedButton.icon(
+                  onPressed: () => context.go('/house/$houseId/meter-reading'),
+                  icon: const Icon(Icons.speed),
+                  label: const Text('Meter Reading'),
+                ),
                 // Rent Breakdown Card
                 rentCalculationAsync.when(
                   data: (rentCalculation) =>
@@ -150,7 +154,11 @@ class HouseDetailPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-
+                ElevatedButton.icon(
+                  onPressed: () => context.go('/house/$houseId/payment'),
+                  icon: const Icon(Icons.payment),
+                  label: const Text('Record Payment'),
+                ),
                 // Tenant Information
                 tenantsAsync.when(
                   data: (tenants) {
@@ -208,28 +216,6 @@ class HouseDetailPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Action Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () =>
-                            context.go('/house/$houseId/meter-reading'),
-                        icon: const Icon(Icons.speed),
-                        label: const Text('Meter Reading'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => context.go('/house/$houseId/payment'),
-                        icon: const Icon(Icons.payment),
-                        label: const Text('Record Payment'),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           );
