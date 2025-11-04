@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/entities/payment.dart';
-import '../../domain/entities/rent_calculation.dart';
 import '../../application/providers/payment_provider.dart';
 import '../../application/providers/rent_calculation_provider.dart';
 import '../../application/providers/tenant_provider.dart';
@@ -53,6 +52,12 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       rentCalculationProvider(widget.houseId),
     );
     final paymentsAsync = ref.watch(paymentsByHouseProvider(widget.houseId));
+
+    final totalAmount = rentCalculationAsync.when(
+      data: (rentCalculation) => rentCalculation.totalRent,
+      loading: () => 0,
+      error: (_, __) => 0,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -310,14 +315,22 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
   }
 
   void _recordPayment() {
+    final rentCalculationAsync = ref.watch(
+      rentCalculationProvider(widget.houseId),
+    );
+    final totalAmount = rentCalculationAsync.when(
+      data: (rentCalculation) => rentCalculation.totalRent,
+      loading: () => 0,
+      error: (_, __) => 0,
+    );
     if (_formKey.currentState!.validate() && _tenantId != null) {
       final payment = Payment(
         id: const Uuid().v4(),
         tenantId: _tenantId!,
         houseId: widget.houseId,
         paidAmount: double.parse(_amountController.text),
-        totalAmount: double.parse(_amountController.text),
-        remainingAmount: double.parse(_amountController.text),
+        totalAmount: totalAmount as double,
+        remainingAmount: totalAmount - double.parse(_amountController.text),
         paymentDate: _paymentDate,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

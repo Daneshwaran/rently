@@ -18,7 +18,18 @@ class _CreateHousePageState extends ConsumerState<CreateHousePage> {
   final _monthlyRentController = TextEditingController();
   final _securityDepositController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime _rentDueDate = DateTime.now().add(const Duration(days: 1));
+
+  // Hard code rent due date to the 10th of next month (current year)
+  DateTime get _rentDueDate {
+    final now = DateTime.now();
+    // Always use the 10th of next month
+    if (now.month == 12) {
+      // If December, roll over to January of next year
+      return DateTime(now.year + 1, 1, 10);
+    } else {
+      return DateTime(now.year, now.month + 1, 10);
+    }
+  }
 
   @override
   void dispose() {
@@ -59,83 +70,8 @@ class _CreateHousePageState extends ConsumerState<CreateHousePage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _monthlyRentController,
-                decoration: const InputDecoration(
-                  labelText: 'Monthly Rent',
-                  hintText: 'e.g., 15000',
-                  prefixIcon: Icon(Icons.currency_rupee),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter monthly rent';
-                  }
-                  final rent = double.tryParse(value);
-                  if (rent == null || rent <= 0) {
-                    return 'Please enter a valid rent amount';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _securityDepositController,
-                decoration: const InputDecoration(
-                  labelText: 'Security Deposit',
-                  hintText: 'e.g., 30000',
-                  prefixIcon: Icon(Icons.security),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter security deposit';
-                  }
-                  final deposit = double.tryParse(value);
-                  if (deposit == null || deposit < 0) {
-                    return 'Please enter a valid deposit amount';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              InkWell(
-                onTap: () async {
-                  final date = await showDatePicker(
-                    context: context,
-                    initialDate: _rentDueDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
-                  if (date != null) {
-                    setState(() {
-                      _rentDueDate = date;
-                    });
-                  }
-                },
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Rent Due Date',
-                    prefixIcon: Icon(Icons.calendar_today),
-                  ),
-                  child: Text(
-                    '${_rentDueDate.day}/${_rentDueDate.month}/${_rentDueDate.year}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description (Optional)',
-                  hintText: 'e.g., 2BHK apartment with balcony',
-                  prefixIcon: Icon(Icons.description),
-                ),
-                maxLines: 3,
-              ),
               const SizedBox(height: 32),
+
               ElevatedButton(
                 onPressed: createHouseState.isLoading ? null : _createHouse,
                 style: ElevatedButton.styleFrom(
@@ -170,11 +106,6 @@ class _CreateHousePageState extends ConsumerState<CreateHousePage> {
       final house = House(
         id: const Uuid().v4(),
         name: _nameController.text.trim(),
-        monthlyRent: double.parse(_monthlyRentController.text),
-        securityDeposit: double.parse(_securityDepositController.text),
-        rentDueDate: _rentDueDate,
-        isAvailable: true,
-        description: _descriptionController.text.trim(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );

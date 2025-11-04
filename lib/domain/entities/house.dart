@@ -8,11 +8,6 @@ class House with _$House {
   const factory House({
     required String id,
     required String name,
-    required double monthlyRent,
-    required double securityDeposit,
-    required DateTime rentDueDate,
-    required bool isAvailable,
-    required String description,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _House;

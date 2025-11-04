@@ -23,11 +23,6 @@ House _$HouseFromJson(Map<String, dynamic> json) {
 mixin _$House {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  double get monthlyRent => throw _privateConstructorUsedError;
-  double get securityDeposit => throw _privateConstructorUsedError;
-  DateTime get rentDueDate => throw _privateConstructorUsedError;
-  bool get isAvailable => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
@@ -45,17 +40,7 @@ abstract class $HouseCopyWith<$Res> {
   factory $HouseCopyWith(House value, $Res Function(House) then) =
       _$HouseCopyWithImpl<$Res, House>;
   @useResult
-  $Res call({
-    String id,
-    String name,
-    double monthlyRent,
-    double securityDeposit,
-    DateTime rentDueDate,
-    bool isAvailable,
-    String description,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  });
+  $Res call({String id, String name, DateTime? createdAt, DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -75,11 +60,6 @@ class _$HouseCopyWithImpl<$Res, $Val extends House>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? monthlyRent = null,
-    Object? securityDeposit = null,
-    Object? rentDueDate = null,
-    Object? isAvailable = null,
-    Object? description = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -92,26 +72,6 @@ class _$HouseCopyWithImpl<$Res, $Val extends House>
             name: null == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            monthlyRent: null == monthlyRent
-                ? _value.monthlyRent
-                : monthlyRent // ignore: cast_nullable_to_non_nullable
-                      as double,
-            securityDeposit: null == securityDeposit
-                ? _value.securityDeposit
-                : securityDeposit // ignore: cast_nullable_to_non_nullable
-                      as double,
-            rentDueDate: null == rentDueDate
-                ? _value.rentDueDate
-                : rentDueDate // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            isAvailable: null == isAvailable
-                ? _value.isAvailable
-                : isAvailable // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            description: null == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
                       as String,
             createdAt: freezed == createdAt
                 ? _value.createdAt
@@ -135,17 +95,7 @@ abstract class _$$HouseImplCopyWith<$Res> implements $HouseCopyWith<$Res> {
   ) = __$$HouseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String name,
-    double monthlyRent,
-    double securityDeposit,
-    DateTime rentDueDate,
-    bool isAvailable,
-    String description,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  });
+  $Res call({String id, String name, DateTime? createdAt, DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -164,11 +114,6 @@ class __$$HouseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? monthlyRent = null,
-    Object? securityDeposit = null,
-    Object? rentDueDate = null,
-    Object? isAvailable = null,
-    Object? description = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -181,26 +126,6 @@ class __$$HouseImplCopyWithImpl<$Res>
         name: null == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        monthlyRent: null == monthlyRent
-            ? _value.monthlyRent
-            : monthlyRent // ignore: cast_nullable_to_non_nullable
-                  as double,
-        securityDeposit: null == securityDeposit
-            ? _value.securityDeposit
-            : securityDeposit // ignore: cast_nullable_to_non_nullable
-                  as double,
-        rentDueDate: null == rentDueDate
-            ? _value.rentDueDate
-            : rentDueDate // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        isAvailable: null == isAvailable
-            ? _value.isAvailable
-            : isAvailable // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        description: null == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
                   as String,
         createdAt: freezed == createdAt
             ? _value.createdAt
@@ -221,11 +146,6 @@ class _$HouseImpl implements _House {
   const _$HouseImpl({
     required this.id,
     required this.name,
-    required this.monthlyRent,
-    required this.securityDeposit,
-    required this.rentDueDate,
-    required this.isAvailable,
-    required this.description,
     this.createdAt,
     this.updatedAt,
   });
@@ -238,23 +158,13 @@ class _$HouseImpl implements _House {
   @override
   final String name;
   @override
-  final double monthlyRent;
-  @override
-  final double securityDeposit;
-  @override
-  final DateTime rentDueDate;
-  @override
-  final bool isAvailable;
-  @override
-  final String description;
-  @override
   final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'House(id: $id, name: $name, monthlyRent: $monthlyRent, securityDeposit: $securityDeposit, rentDueDate: $rentDueDate, isAvailable: $isAvailable, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'House(id: $id, name: $name, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -264,16 +174,6 @@ class _$HouseImpl implements _House {
             other is _$HouseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.monthlyRent, monthlyRent) ||
-                other.monthlyRent == monthlyRent) &&
-            (identical(other.securityDeposit, securityDeposit) ||
-                other.securityDeposit == securityDeposit) &&
-            (identical(other.rentDueDate, rentDueDate) ||
-                other.rentDueDate == rentDueDate) &&
-            (identical(other.isAvailable, isAvailable) ||
-                other.isAvailable == isAvailable) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -282,18 +182,7 @@ class _$HouseImpl implements _House {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    name,
-    monthlyRent,
-    securityDeposit,
-    rentDueDate,
-    isAvailable,
-    description,
-    createdAt,
-    updatedAt,
-  );
+  int get hashCode => Object.hash(runtimeType, id, name, createdAt, updatedAt);
 
   /// Create a copy of House
   /// with the given fields replaced by the non-null parameter values.
@@ -313,11 +202,6 @@ abstract class _House implements House {
   const factory _House({
     required final String id,
     required final String name,
-    required final double monthlyRent,
-    required final double securityDeposit,
-    required final DateTime rentDueDate,
-    required final bool isAvailable,
-    required final String description,
     final DateTime? createdAt,
     final DateTime? updatedAt,
   }) = _$HouseImpl;
@@ -328,16 +212,6 @@ abstract class _House implements House {
   String get id;
   @override
   String get name;
-  @override
-  double get monthlyRent;
-  @override
-  double get securityDeposit;
-  @override
-  DateTime get rentDueDate;
-  @override
-  bool get isAvailable;
-  @override
-  String get description;
   @override
   DateTime? get createdAt;
   @override

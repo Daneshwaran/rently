@@ -22,11 +22,40 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
   DateTime _readingDate = DateTime.now();
   double _previousReading = 0.0;
   double _calculatedAmount = 0.0;
+  bool _hasLoadedInitialReading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _loadPreviousReading();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasLoadedInitialReading) {
+      _loadInitialReading();
+    }
+  }
+
+  Future<void> _loadInitialReading() async {
+    final latestReadingAsync = ref.read(
+      latestMeterReadingProvider((
+        houseId: widget.houseId,
+        readingType: _selectedType,
+      )).future,
+    );
+
+    try {
+      final reading = await latestReadingAsync;
+      if (mounted) {
+        setState(() {
+          _previousReading = reading?.currentReading ?? 0.0;
+          _hasLoadedInitialReading = true;
+        });
+      }
+    } catch (e) {
+      // Handle error silently, will default to 0.0
+      if (mounted) {
+        setState(() {
+          _hasLoadedInitialReading = true;
+        });
+      }
+    }
   }
 
   @override
@@ -34,21 +63,6 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
     _currentReadingController.dispose();
     _rateController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadPreviousReading() async {
-    // final latestReading = await ref.read(
-    //   latestMeterReadingProvider((
-    //     houseId: widget.houseId,
-    //     readingType: _selectedType,
-    //   )).future,
-    // );
-
-    final latestReading = {'electricity': 1000.0, 'water': 1000.0};
-
-    setState(() {
-      _previousReading = latestReading[_selectedType.name.toString()] ?? 0.0;
-    });
   }
 
   void _calculateAmount() {
@@ -66,6 +80,32 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
   @override
   Widget build(BuildContext context) {
     final createMeterReadingState = ref.watch(createMeterReadingProvider);
+
+    // Watch the provider to ensure it's active and triggers on readingType changes
+    ref.watch(
+      latestMeterReadingProvider((
+        houseId: widget.houseId,
+        readingType: _selectedType,
+      )),
+    );
+
+    // Update _previousReading when the provider value changes (e.g., when reading type changes)
+    ref.listen(
+      latestMeterReadingProvider((
+        houseId: widget.houseId,
+        readingType: _selectedType,
+      )),
+      (previous, next) {
+        next.whenData((reading) {
+          final newPreviousReading = reading?.currentReading ?? 0.0;
+          if (mounted && _previousReading != newPreviousReading) {
+            setState(() {
+              _previousReading = newPreviousReading;
+            });
+          }
+        });
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +148,7 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
                                   _rateController.clear();
                                   _calculatedAmount = 0.0;
                                 });
-                                _loadPreviousReading();
+                                _loadInitialReading();
                               }
                             },
                           ),
@@ -125,7 +165,7 @@ class _MeterReadingPageState extends ConsumerState<MeterReadingPage> {
                                   _rateController.clear();
                                   _calculatedAmount = 0.0;
                                 });
-                                _loadPreviousReading();
+                                _loadInitialReading();
                               }
                             },
                           ),

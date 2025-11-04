@@ -102,7 +102,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
           .where('tenantId', isEqualTo: tenantId)
           .get();
       if (querySnapshot.docs.isNotEmpty) {
-        final payment = Payment.fromJson(querySnapshot.docs.first.data()!);
+        final payment = Payment.fromJson(querySnapshot.docs.first.data());
         log('Payment found: ${payment.id}');
         return payment;
       } else {
