@@ -4,8 +4,15 @@ import '../../domain/entities/tenant.dart';
 class TenantInfoCard extends StatelessWidget {
   final Tenant tenant;
   final VoidCallback onEdit;
-
-  const TenantInfoCard({super.key, required this.tenant, required this.onEdit});
+  final VoidCallback onDelete;
+  final VoidCallback onReplace;
+  const TenantInfoCard({
+    super.key,
+    required this.tenant,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onReplace,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +36,11 @@ class TenantInfoCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+                IconButton(icon: const Icon(Icons.delete), onPressed: onDelete),
+                IconButton(
+                  icon: const Icon(Icons.find_replace),
+                  onPressed: onReplace,
+                ),
               ],
             ),
             const SizedBox(height: 16),

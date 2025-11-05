@@ -3,8 +3,8 @@ import '../pages/house_list_page.dart';
 import '../pages/create_house_page.dart';
 import '../pages/house_detail_page.dart';
 import '../pages/tenant_form_page.dart';
-import '../pages/meter_reading_page.dart';
 import '../pages/payment_page.dart';
+import '../pages/meter_reading_page.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -36,11 +36,12 @@ final appRouter = GoRouter(
               },
             ),
             GoRoute(
-              path: 'meter-reading',
-              name: 'meter-reading',
+              path: 'tenant/edit/:tenantId',
+              name: 'edit-tenant',
               builder: (context, state) {
                 final houseId = state.pathParameters['id']!;
-                return MeterReadingPage(houseId: houseId);
+                final tenantId = state.pathParameters['tenantId']!;
+                return TenantFormPage(houseId: houseId, tenantId: tenantId);
               },
             ),
             GoRoute(
@@ -49,6 +50,14 @@ final appRouter = GoRouter(
               builder: (context, state) {
                 final houseId = state.pathParameters['id']!;
                 return PaymentPage(houseId: houseId);
+              },
+            ),
+            GoRoute(
+              path: 'meter-reading',
+              name: 'meter-reading',
+              builder: (context, state) {
+                final houseId = state.pathParameters['id']!;
+                return MeterReadingPage(houseId: houseId);
               },
             ),
           ],

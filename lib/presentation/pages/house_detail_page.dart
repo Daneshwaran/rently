@@ -46,38 +46,6 @@ class HouseDetailPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () => context.go('/house/$houseId/meter-reading'),
-                  icon: const Icon(Icons.speed),
-                  label: const Text('Meter Reading'),
-                ),
-                // Rent Breakdown Card
-                rentCalculationAsync.when(
-                  data: (rentCalculation) =>
-                      RentBreakdownCard(rentCalculation: rentCalculation),
-                  loading: () => const Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  ),
-                  error: (error, stackTrace) => Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        'Error loading rent calculation: $error',
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () => context.go('/house/$houseId/payment'),
-                  icon: const Icon(Icons.payment),
-                  label: const Text('Record Payment'),
-                ),
                 // Tenant Information
                 tenantsAsync.when(
                   data: (tenants) {
@@ -115,7 +83,16 @@ class HouseDetailPage extends ConsumerWidget {
                     final currentTenant = tenants.first;
                     return TenantInfoCard(
                       tenant: currentTenant,
-                      onEdit: () => context.go('/house/$houseId/tenant/create'),
+                      onEdit: () => context.go(
+                        '/house/$houseId/tenant/edit/${currentTenant.id}',
+                      ),
+                      onDelete: () => _showDeleteTenantDialog(
+                        context,
+                        ref,
+                        currentTenant.id!,
+                      ),
+                      onReplace: () =>
+                          context.go('/house/$houseId/tenant/create'),
                     );
                   },
                   loading: () => const Card(
@@ -134,6 +111,39 @@ class HouseDetailPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => context.go('/house/$houseId/meter-reading'),
+                  icon: const Icon(Icons.speed),
+                  label: const Text('Meter Reading'),
+                ),
+                // Rent Breakdown Card
+                rentCalculationAsync.when(
+                  data: (rentCalculation) =>
+                      RentBreakdownCard(rentCalculation: rentCalculation),
+                  loading: () => const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                  error: (error, stackTrace) => Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Error loading rent calculation: $error',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => context.go('/house/$houseId/payment'),
+                  icon: const Icon(Icons.payment),
+                  label: const Text('Record Payment'),
+                ),
+
                 const SizedBox(height: 16),
               ],
             ),
@@ -164,6 +174,48 @@ class HouseDetailPage extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDeleteTenantDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String tenantId,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Tenant'),
+        content: const Text(
+          'Are you sure you want to delete this tenant? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref
+                  .read(deleteTenantProvider.notifier)
+                  .deleteTenant(tenantId)
+                  .then((_) {
+                    if (context.mounted) {
+                      context.go('/house/$houseId');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tenant deleted successfully!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  });
+            },
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }

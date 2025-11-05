@@ -7,8 +7,8 @@ import '../../application/providers/tenant_provider.dart';
 
 class TenantFormPage extends ConsumerStatefulWidget {
   final String houseId;
-
-  const TenantFormPage({super.key, required this.houseId});
+  final String? tenantId;
+  const TenantFormPage({super.key, required this.houseId, this.tenantId});
 
   @override
   ConsumerState<TenantFormPage> createState() => _TenantFormPageState();
@@ -19,6 +19,8 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
+  final _rentAmountController = TextEditingController();
+  final _securityDepositController = TextEditingController();
   DateTime _moveInDate = DateTime.now();
   DateTime _agreementStartDate = DateTime.now();
   DateTime _agreementEndDate = DateTime.now().add(const Duration(days: 365));
@@ -28,6 +30,9 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
   void initState() {
     super.initState();
     _checkExistingTenant();
+    if (widget.tenantId != null) {
+      _loadTenant(widget.tenantId!);
+    }
   }
 
   @override
@@ -35,7 +40,28 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
+    _rentAmountController.dispose();
+    _securityDepositController.dispose();
     super.dispose();
+  }
+
+  Tenant? _originalTenant;
+
+  Future<void> _loadTenant(String tenantId) async {
+    final tenant = await ref.read(tenantProvider(tenantId).future);
+    if (tenant != null) {
+      _originalTenant = tenant;
+      setState(() {
+        _nameController.text = tenant.name;
+        _phoneController.text = tenant.phoneNumber;
+        _emailController.text = tenant.email ?? '';
+        _rentAmountController.text = tenant.rentAmount.toString();
+        _securityDepositController.text = tenant.securityDeposit.toString();
+        _moveInDate = tenant.moveInDate;
+        _agreementStartDate = tenant.agreementStartDate;
+        _agreementEndDate = tenant.agreementEndDate;
+      });
+    }
   }
 
   Future<void> _checkExistingTenant() async {
@@ -135,6 +161,46 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
                 },
               ),
               const SizedBox(height: 16),
+              TextFormField(
+                controller: _rentAmountController,
+                decoration: const InputDecoration(
+                  labelText: 'Rent Amount',
+                  hintText: 'e.g., 10000',
+                  prefixIcon: Icon(Icons.currency_rupee),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter rent amount';
+                  }
+                  final amount = num.tryParse(value);
+                  if (amount == null || amount <= 0) {
+                    return 'Please enter a valid rent amount';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _securityDepositController,
+                decoration: const InputDecoration(
+                  labelText: 'Security Deposit',
+                  hintText: 'e.g., 20000',
+                  prefixIcon: Icon(Icons.security),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter security deposit';
+                  }
+                  final amount = num.tryParse(value);
+                  if (amount == null || amount <= 0) {
+                    return 'Please enter a valid security deposit';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
               InkWell(
                 onTap: () async {
                   final date = await showDatePicker(
@@ -229,7 +295,11 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Text(
-                        _hasExistingTenant ? 'Replace Tenant' : 'Add Tenant',
+                        widget.tenantId != null
+                            ? 'Update Tenant'
+                            : (_hasExistingTenant
+                                  ? 'Replace Tenant'
+                                  : 'Add Tenant'),
                       ),
               ),
               if (createTenantState.hasError)
@@ -250,39 +320,76 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
 
   void _createTenant() {
     if (_formKey.currentState!.validate()) {
-      final tenant = Tenant(
-        id: const Uuid().v4(),
-        name: _nameController.text.trim(),
-        houseId: widget.houseId,
-        moveInDate: _moveInDate,
-        agreementStartDate: _agreementStartDate,
-        agreementEndDate: _agreementEndDate,
-        phoneNumber: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
-        email: _emailController.text.trim().isEmpty
-            ? null
-            : _emailController.text.trim(),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      final isEditing = widget.tenantId != null;
 
-      ref.read(createTenantProvider.notifier).createTenant(tenant).then((_) {
-        if (mounted) {
-          ref.invalidate(tenantsByHouseProvider(widget.houseId));
-          context.pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _hasExistingTenant
-                    ? 'Tenant replaced successfully!'
-                    : 'Tenant added successfully!',
+      if (isEditing) {
+        // Update existing tenant
+        final tenant = Tenant(
+          id: widget.tenantId,
+          name: _nameController.text.trim(),
+          rentAmount: num.parse(_rentAmountController.text.trim()),
+          securityDeposit: num.parse(_securityDepositController.text.trim()),
+          houseId: widget.houseId,
+          moveInDate: _moveInDate,
+          agreementStartDate: _agreementStartDate,
+          agreementEndDate: _agreementEndDate,
+          phoneNumber: _phoneController.text.trim(),
+          email: _emailController.text.trim().isEmpty
+              ? null
+              : _emailController.text.trim(),
+          createdAt: _originalTenant?.createdAt, // Keep original createdAt
+          updatedAt: DateTime.now(),
+        );
+
+        ref.read(updateTenantProvider.notifier).updateTenant(tenant).then((_) {
+          if (mounted) {
+            ref.invalidate(tenantsByHouseProvider(widget.houseId));
+            ref.invalidate(tenantProvider(widget.tenantId!));
+            context.pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tenant updated successfully!'),
+                backgroundColor: Colors.green,
               ),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-      });
+            );
+          }
+        });
+      } else {
+        // Create new tenant
+        final tenant = Tenant(
+          id: const Uuid().v4(),
+          name: _nameController.text.trim(),
+          rentAmount: num.parse(_rentAmountController.text.trim()),
+          securityDeposit: num.parse(_securityDepositController.text.trim()),
+          houseId: widget.houseId,
+          moveInDate: _moveInDate,
+          agreementStartDate: _agreementStartDate,
+          agreementEndDate: _agreementEndDate,
+          phoneNumber: _phoneController.text.trim(),
+          email: _emailController.text.trim().isEmpty
+              ? null
+              : _emailController.text.trim(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        ref.read(createTenantProvider.notifier).createTenant(tenant).then((_) {
+          if (mounted) {
+            ref.invalidate(tenantsByHouseProvider(widget.houseId));
+            context.pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  _hasExistingTenant
+                      ? 'Tenant replaced successfully!'
+                      : 'Tenant added successfully!',
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        });
+      }
     }
   }
 }
