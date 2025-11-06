@@ -30,23 +30,14 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
   void initState() {
     super.initState();
     _checkExistingTenant();
-    if (widget.tenantId != null) {
-      _loadTenant(widget.tenantId!);
+
+    if (widget.tenantId != null && widget.tenantId!.isNotEmpty) {
+      final tenantId = widget.tenantId!;
+      _loadTenant(tenantId);
     }
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _rentAmountController.dispose();
-    _securityDepositController.dispose();
-    super.dispose();
-  }
-
   Tenant? _originalTenant;
-
   Future<void> _loadTenant(String tenantId) async {
     final tenant = await ref.read(tenantProvider(tenantId).future);
     if (tenant != null) {
@@ -89,7 +80,7 @@ class _TenantFormPageState extends ConsumerState<TenantFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (_hasExistingTenant)
+              if (_hasExistingTenant && widget.tenantId == null)
                 Card(
                   color: Colors.orange.withOpacity(0.1),
                   child: Padding(
